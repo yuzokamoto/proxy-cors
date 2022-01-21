@@ -9,9 +9,17 @@ app.use((req, res, next) => {
 })
 
 app.get('/', async (req, res) => {
-    const { url } = req.query
-    const { data } = await axios.get(url)
-    return res.send(data)
+    try {
+        const { url } = req.query
+
+        if (!url) throw new Error()
+        
+        const { data } = await axios.get(url)
+        
+        res.send(data)
+    } catch (error) {
+        res.send({ message: "Erro de request: url query inválido ou API informada não respondeu" })
+    }
 })
 
 const PORT = process.env.PORT || 3000
